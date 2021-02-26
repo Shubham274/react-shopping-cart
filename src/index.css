@@ -94,6 +94,7 @@ Products */
   flex: 0 1 29rem;
   height: 47rem;
   padding: 1rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .product {
@@ -140,4 +141,19 @@ Products */
 .button.primary:hover {
   background-color: #8b6c0c;
   color: #fff;
+}
+
+/* filter section */
+
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 1rem;
+  border-bottom: solid 0.1rem #c0c0c0;
+}
+
+.filter div {
+  flex: 1;
 }
