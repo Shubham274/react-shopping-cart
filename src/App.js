@@ -4,13 +4,23 @@ import Products from './components/Products';
 import data from './data.json';
 import Cart from './components/Cart';
 
+// localStorage.setItem('cartItems', 'Apogee');
+// var artist = localStorage.getItem('track');
+// console.log(artist);
+
 class App extends React.Component {
   state = {
     products: data.products,
-    cartItems: [],
+    cartItems: localStorage.getItem('cartItems')
+      ? JSON.parse(localStorage.getItem('cartItems'))
+      : [],
     size: '',
     sort: '',
   };
+
+  createOrder(order) {
+    alert(`need to save order for ${order.name}`);
+  }
 
   addToCart = (product) => {
     const cartItems = this.state.cartItems.slice();
@@ -25,13 +35,16 @@ class App extends React.Component {
       cartItems.push({ ...product, count: 1 });
     }
     this.setState({ cartItems: cartItems });
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
 
   removeFromCart = (product) => {
     const cartItems = this.state.cartItems.slice();
+    const filteredItems = cartItems.filter((cart) => cart._id !== product._id);
     this.setState({
-      cartItems: cartItems.filter((cart) => cart._id !== product._id),
+      cartItems: filteredItems,
     });
+    localStorage.setItem('cartItems', JSON.stringify(filteredItems));
   };
 
   sortProducts = (e) => {
@@ -64,6 +77,7 @@ class App extends React.Component {
       });
     }
   };
+
   render() {
     return (
       <div className="grid-container">
@@ -90,6 +104,7 @@ class App extends React.Component {
               <Cart
                 cartItems={this.state.cartItems}
                 removeFromCart={this.removeFromCart}
+                createOrder={this.createOrder}
               />
             </div>
           </div>
