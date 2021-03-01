@@ -211,7 +211,7 @@ Products */
 }
 
 /* form */
-form{
+form {
   width: 100%;
 }
 .form-container {
@@ -229,4 +229,31 @@ form{
 input {
   padding: 1rem;
   border: 0.1rem solid silver;
+}
+
+/* modal-product-details */
+
+.product-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-height: 96vh;
+}
+
+.product-details img {
+  max-height: 100vh;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.product-details-desc {
+  flex: 1 1;
+  margin: 1rem;
+}
+
+.close-modal {
+  position: absolute;
+  right: 1rem;
+  top: 2.5rem;
+  z-index: 1000;
 }
