@@ -1,10 +1,9 @@
 const { nanoid } = require('nanoid');
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const app = express();
-app.use(bodyParser.json());
+app.use(express.json());
 
 mongoose.connect('mongodb://localhost/react-shopping-cart-db', {
   useNewUrlParser: true,
@@ -32,8 +31,8 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   const newProduct = new Product(req.body);
-  const savedProduct = await newProduct.save();
-  res.send(savedProduct);
+  const saveProduct = await newProduct.save();
+  res.send(saveProduct);
 });
 
 app.delete('/api/products/:id', async (req, res) => {

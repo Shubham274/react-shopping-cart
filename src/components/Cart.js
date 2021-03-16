@@ -1,7 +1,8 @@
 import React from 'react';
 import Fade from 'react-reveal/Fade';
+import formatCurrency from '../util';
 
-const Cart = (props) => {
+const Cart = ({ cartItems, removeFromCart, createOrder }) => {
   // state = {
   //   showCheckOut: false,
   // };
@@ -17,17 +18,17 @@ const Cart = (props) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
-  const createOrder = (e) => {
+  const submitForm = (e) => {
     e.preventDefault();
     const order = {
       name: state.name,
       email: state.email,
       address: state.address,
-      cartItems: props.cartItems,
+      cartItems: cartItems,
     };
-    props.createOrder(order);
+    console.log(order);
+    createOrder(order);
   };
-  const { cartItems } = props;
   return (
     <div>
       {cartItems.length === 0 ? (
@@ -50,9 +51,9 @@ const Cart = (props) => {
                     <div>
                       <div>{cart.title}</div>
                       <div className="right">
-                        ${cart.price} x {cart.count} {''}
+                        {formatCurrency(cart.price)} x {cart.count} {''}
                         <button
-                          onClick={() => props.removeFromCart(cart)}
+                          onClick={() => removeFromCart(cart._id)}
                           className="button"
                         >
                           Remove
@@ -71,13 +72,12 @@ const Cart = (props) => {
           <div className="cart">
             <div className="total">
               <div>
-                Total: {''}$
-                {cartItems
-                  .reduce(
-                    (acc, currValue) => acc + currValue.price * currValue.count,
-                    0
-                  )
-                  .toFixed(2)}
+                Total: {''}
+                {formatCurrency(
+                  cartItems.reduce((total, num) => {
+                    return total + num.price * num.count;
+                  }, 0)
+                )}
               </div>
               <button
                 onClick={() => {
@@ -92,7 +92,7 @@ const Cart = (props) => {
           {showCheckOut && (
             <Fade right cascade>
               <div className="cart">
-                <form onSubmit={createOrder}>
+                <form onSubmit={submitForm}>
                   <ul className="form-container">
                     <li>
                       <label htmlFor="email">Email</label>
