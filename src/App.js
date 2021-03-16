@@ -3,6 +3,8 @@ import Filter from './components/Filter';
 import Products from './components/Products';
 import data from './data.json';
 import Cart from './components/Cart';
+import store from './store';
+import { Provider } from 'react-redux';
 
 // localStorage.setItem('cartItems', 'Apogee');
 // var artist = localStorage.getItem('track');
@@ -38,26 +40,29 @@ class App extends React.Component {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
 
-  removeFromCart = (product) => {
-    const cartItems = this.state.cartItems.slice();
-    const filteredItems = cartItems.filter((cart) => cart._id !== product._id);
-    this.setState({
-      cartItems: filteredItems,
-    });
-    localStorage.setItem('cartItems', JSON.stringify(filteredItems));
+  removeFromCart = (product_id) => {
+    const removeItem = this.state.cartItems.filter(
+      (item) => item._id !== product_id
+    );
+    this.setState({ cartItems: removeItem });
+    localStorage.setItem('cartItems', JSON.stringify(removeItem));
   };
 
   sortProducts = (e) => {
-    const value = e.target.value;
+    const sort = e.target.value;
     this.setState({
-      sort: value,
+      sort: sort,
       products: this.state.products
         .slice()
         .sort((a, b) =>
-          value === 'lowest'
-            ? parseFloat(a.price) - parseFloat(b.price)
-            : value === 'highest'
-            ? parseFloat(b.price) - parseFloat(a.price)
+          sort === 'lowest'
+            ? a.price > b.price
+              ? 1
+              : -1
+            : sort === 'highest'
+            ? a.price < b.price
+              ? 1
+              : -1
             : a._id > b._id
             ? 1
             : -1
@@ -80,37 +85,36 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="grid-container">
-        <header>
-          <a href="/">React Shopping Cart</a>
-        </header>
-        <main>
-          <div className="content">
-            <div className="main">
-              <Filter
-                count={this.state.products.length}
-                size={this.state.size}
-                sort={this.state.sort}
-                filterProducts={this.filterProducts}
-                sortProducts={this.sortProducts}
-              />
+      <Provider store={store}>
+        <div className="grid-container">
+          <header>
+            <a href="/">React Shopping Cart</a>
+          </header>
+          <main>
+            <div className="content">
+              <div className="main">
+                <Filter
+                  count={this.state.products.length}
+                  size={this.state.size}
+                  sort={this.state.sort}
+                  filterProducts={this.filterProducts}
+                  sortProducts={this.sortProducts}
+                />
 
-              <Products
-                products={this.state.products}
-                addToCart={this.addToCart}
-              />
+                <Products addToCart={this.addToCart} />
+              </div>
+              <div className="sidebar">
+                <Cart
+                  cartItems={this.state.cartItems}
+                  removeFromCart={this.removeFromCart}
+                  createOrder={this.createOrder}
+                />
+              </div>
             </div>
-            <div className="sidebar">
-              <Cart
-                cartItems={this.state.cartItems}
-                removeFromCart={this.removeFromCart}
-                createOrder={this.createOrder}
-              />
-            </div>
-          </div>
-        </main>
-        <footer>All rights reserved</footer>
-      </div>
+          </main>
+          <footer>All rights reserved</footer>
+        </div>
+      </Provider>
     );
   }
 }
